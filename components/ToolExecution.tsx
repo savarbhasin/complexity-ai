@@ -9,7 +9,6 @@ import {
   Loader2,
   CheckCircle2,
   Binary,
-  Newspaper,
   SearchIcon,
   YoutubeIcon,
 } from 'lucide-react';
@@ -18,10 +17,7 @@ type ToolMessage = {
   name: keyof typeof toolConfigs;
 };
 
-type ToolExecutionProps = {
-  message: ToolMessage;
-  isLoading: boolean;
-};
+
 
 const toolConfigs = {
   webscrape: {
@@ -97,15 +93,15 @@ const toolConfigs = {
   }
 };
 
-const LoadingSpinner = ({ color }: { color: string }) => (
-  <motion.div 
-    className={`flex items-center justify-center ${color}`}
-    animate={{ rotate: 360 }}
-    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-  >
-    <Loader2 className="h-5 w-5" />
-  </motion.div>
-);
+// const LoadingSpinner = ({ color }: { color: string }) => (
+//   <motion.div 
+//     className={`flex items-center justify-center ${color}`}
+//     animate={{ rotate: 360 }}
+//     transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+//   >
+//     <Loader2 className="h-5 w-5" />
+//   </motion.div>
+// );
 
 const LoadingPulse = ({ color }: { color: string }) => (
   <motion.div

@@ -13,7 +13,7 @@ export async function GET(request: Request) {
     return new Response(JSON.stringify(metadata), {
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
+  } catch {
     return new Response(JSON.stringify({ error: "Failed to fetch metadata" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
