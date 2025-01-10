@@ -1,93 +1,10 @@
-// import React from 'react';
-// import { AgentState } from "@/lib/types";
-// import { useCoAgent, useCopilotChat } from "@copilotkit/react-core";
-// import { Role, TextMessage } from "@copilotkit/runtime-client-gql";
-// import { Send, StopCircle, Settings } from "lucide-react";
-// import CopilotTools from './tools';
-// import URLGrid from './URLGrid';
-
-// export function ChatInterface() {
-//   const {
-//     appendMessage,
-//     visibleMessages,
-//     isLoading,
-//     stopGeneration
-//   } = useCopilotChat();
-  
-//   const { state } = useCoAgent<AgentState>({
-//     name: 'complexity_ai',
-//     initialState: {
-//       messages_format: []
-//     }
-//   });
-  
-//   const messages = state.messages_format;
-//   const [inputValue, setInputValue] = React.useState("");
-
-//   const sendMessage = (content: string) => {
-//     if (content.trim()) {
-//       appendMessage(new TextMessage({ content, role: Role.User }));
-//       setInputValue("");
-//     }
-//   };
-
-//   const handleSubmit = (e: React.FormEvent) => {
-//     e.preventDefault();
-//     sendMessage(inputValue);
-//   };
-
-//   return (
-//     <div className="">
-     
-      
-//       {
-//         visibleMessages ? visibleMessages.map((message, index) => {
-//           if(message.isTextMessage()){
-//               if(message.role === Role.User){
-//                   return (
-//                       <div className='' key={index}>User: {message.content}</div>
-//                   )
-//               } else if(message.role === Role.Tool){
-//                   return (
-//                       <div key={index}>Tool: {message.content}</div>
-//                   )
-//               } else if(message.role === Role.Assistant){
-//                   return (
-//                       <div key={index}>Assistant: {message.content}</div>
-//                   )
-//               }
-//           } else if(message.isActionExecutionMessage()){
-//                 return (
-//                     <div key={index}>ActionExecutionMessage: {message.name}</div>
-//                 )
-//           } else if(message.isResultMessage()){
-//                 return (
-//                     <div key={index}>ResultMessage: <URLGrid urls={JSON.parse(message.result).urls}/></div>
-//                 )
-//           }
-//         }) : <div>No visibleMessages</div>
-//       }
-//       <form onSubmit={handleSubmit}>
-//         <input onChange={(e)=>setInputValue(e.target.value)} type="text" placeholder="Type your message..." />
-//         <button type="submit">Submit</button>
-//       </form>
-//       <CopilotTools/>
-
-//     </div>
-        
-    
-//     );
-// }
-
-// export default ChatInterface;
-
-import React from 'react';
-import { AgentState } from "@/lib/types";
-import { useCoAgent, useCopilotChat } from "@copilotkit/react-core";
+import React, { useEffect, useRef } from 'react';
+import { useCopilotChat } from "@copilotkit/react-core";
 import { Role, TextMessage } from "@copilotkit/runtime-client-gql";
-import { Send, StopCircle } from 'lucide-react';
-import { MessageBubble, ToolResult } from './MessageBubble';
+import { BookIcon, Globe, Send, StopCircleIcon, TwitterIcon, YoutubeIcon } from 'lucide-react';
+import { MessageBubble } from './MessageBubble';
 import { ToolExecution } from './ToolExecution';
+import { ToolResult } from './ToolResult';
 
 
 export function ChatInterface() {
@@ -113,48 +30,155 @@ export function ChatInterface() {
     sendMessage(inputValue);
   };
 
-  return (
-    <div className="flex flex-col h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
-      {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {visibleMessages ? (
-          visibleMessages.map((message, index) => {
-            if (message.isTextMessage()) {
-              return <MessageBubble key={index} message={message} />;
-            }
-            if (message.isActionExecutionMessage()) {
-              return <ToolExecution key={index} message={message} isLoading={isLoading} />;
-            }
-            if (message.isResultMessage()) {
-              return <ToolResult key={index} result={message.result} />;
-            }
-            return null;
-          })
-        ) : (
-          <div className="flex items-center justify-center h-full text-gray-500">
-            Start a conversation...
-          </div>
-        )}
-      </div>
+  const messageContainerRef = useRef<HTMLDivElement>(null);
 
-      {/* Input Area */}
-      <div className="p-4 border-t border-gray-800">
-        <form onSubmit={handleSubmit} className="relative">
-          <input
-            type="text"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            className="w-full bg-gray-900/50 border border-gray-700 rounded-2xl px-6 py-4 pr-24 text-white placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
-            placeholder="Type your message..."
-          />
-          <button
-            type="submit"
-            className="absolute right-2 top-1/2 -translate-y-1/2 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-xl p-3 hover:from-emerald-600 hover:to-emerald-700 transition-all duration-300"
-          >
-            <Send className="h-5 w-5 text-white" />
-          </button>
-        </form>
-      </div>
+
+  useEffect(() => {
+    const container = messageContainerRef.current;
+    if (container) {
+        container.scrollTop = container.scrollHeight;
+    }
+  }, [visibleMessages])
+
+  return (
+    <div className="">
+        
+
+        {
+            !visibleMessages || visibleMessages.length === 0 ? (
+                <div className="h-full w-[45rem] flex flex-col items-center justify-center px-4">
+                    <h1 className="text-4xl font-serif text-white mb-8">
+                        Go ahead, ask me anything!
+                    </h1>
+                    
+                    
+                    {/* Search box placeholder */}
+                    <div className="w-full max-w-2xl relative">
+                        <div className="flex items-center bg-gray-900/50 border border-gray-800 rounded-lg p-4">
+                            <div className='flex flex-col gap-4'>
+                                <Globe className="h-5 w-5 text-gray-400 mr-2" />
+                                <YoutubeIcon className="h-5 w-5 text-gray-400 mr-2"/>
+                                <TwitterIcon className="h-5 w-5 text-gray-400 mr-2"/>
+                                <BookIcon className="h-5 w-5 text-gray-400 mr-2"/>
+                            </div>
+                            
+                            
+                            <form onSubmit={handleSubmit} className="relative">
+                                <textarea
+                                    value={inputValue}
+                                    onChange={(e) => setInputValue(e.target.value)}
+                                    onKeyDown={(e) => {
+                                        if(e.key === 'Enter'){
+                                            e.preventDefault();
+                                            sendMessage(inputValue);
+                                        }
+                                    }}
+                                    className="w-[36rem] resize-none px-5 min-h-[7rem] bg-transparent text-white placeholder-gray-400 outline-none"
+                                    placeholder="Type your message..."
+                                />
+                                {
+                                    isLoading ? <button onClick={stopGeneration} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                                    <StopCircleIcon/>
+                                </button> : <button
+                                    type="submit"
+                                    className="absolute -bottom-1 -right-8 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-xl p-3 hover:from-emerald-600 hover:to-emerald-700 transition-all duration-300"
+                                >
+                                    <Send className="h-5 w-5 text-white" />
+                                </button>
+                                }
+                                
+                            </form>
+                        </div>
+                    </div>
+
+                    {/* Trending searches */}
+                    <div className="flex overflow-x-scroll text-xs max-w-full gap-2 mt-8 justify-center">
+                    {['LA Fires', 'L&T Chairperson', 'Mahakumbh 2025', 'PM Modi with Nikhil Kamath on Youtube'].map((term) => (
+                        <button onClick={() => sendMessage(term)}
+                        key={term}
+                        className="flex items-center px-4 py-2 rounded-full bg-gray-800 hover:bg-gray-700 text-gray-300"
+                        >
+                        <svg 
+                            className="h-4 w-4 mr-2" 
+                            viewBox="0 0 24 24" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            strokeWidth="2"
+                        >
+                            <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                        </svg>
+                        {term}
+                        </button>
+                    ))}
+                    </div>
+
+                    {/* Footer */}
+                    <div className="absolute bottom-4 text-sm text-gray-500">
+                    <span>© 2025 All rights reserved.</span>
+                    <span className="ml-4">@savarbhasin</span>
+                    </div>
+                </div>
+            )
+        :
+
+
+        <div className='flex max-w-4xl flex-col h-screen overflow-hidden'>
+            <div ref={messageContainerRef} className="flex-1 w-[45rem] py-10 no-scrollbar overflow-y-auto p-4 space-y-4 scroll-smooth">
+                {visibleMessages ? (
+                visibleMessages.map((message, index) => {
+                    if (message.isTextMessage()) {
+                    return <MessageBubble key={index} message={message} />;
+                    }
+                    if (message.isActionExecutionMessage()) {
+                    return <ToolExecution key={index} message={message} isLoading={isLoading} />;
+                    }
+                    if (message.isResultMessage()) {
+                    return <ToolResult key={index} result={message.result} />;
+                    }
+                    return null;
+                })
+                ) : (
+                <div className="flex items-center justify-center h-full text-gray-500">
+                    Start a conversation...
+                </div>
+                )}
+            </div>
+
+      
+            <div className="p-4 border-gray-800">
+                <form onSubmit={handleSubmit} className="relative">
+                    <textarea
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                        onKeyDown={(e) => {
+                            if(e.key === 'Enter'){
+                                e.preventDefault();
+                                sendMessage(inputValue);
+                            }
+                        }}
+                        className="w-full resize-none min-h-[7rem] bg-gray-900/50 border border-gray-700 rounded-2xl px-6 py-4 pr-24 text-white placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                        placeholder="Type your message..."
+                    />
+                    {
+                        isLoading ? 
+                        <button onClick={stopGeneration} className='absolute cursor-pointer bottom-5 right-3 bg-red-500 hover:bg-red-700 text-white font-bold rounded-full'>
+                            <StopCircleIcon className='h-7 w-7 text-white'/>
+                        </button>
+                    : <button
+                        type="submit"
+                        className="absolute bottom-5 right-3 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-xl p-3 hover:from-emerald-600 hover:to-emerald-700 transition-all duration-300"
+                    >
+                        <Send className="h-5 w-5 text-white" />
+                    </button>
+                    }
+                    
+                </form>
+            </div>
+        </div>
+        
+    }
+      
+      
     </div>
   );
 }

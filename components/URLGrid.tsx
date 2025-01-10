@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Globe, ExternalLink, Clock } from 'lucide-react';
+import { Globe, Clock } from 'lucide-react';
 
 interface Metadata {
   title?: string;
@@ -125,8 +125,8 @@ const URLGrid = ({ urls }: { urls: string[] }) => {
   }
 
   return (
-    <div className="w-full max-w-7xl mx-auto p-2">
-      <div className="flex overflow-x-auto max-w-full ">
+    <div className="w-full max-w-7xl mx-auto p-2 ">
+      <div className="flex overflow-x-auto max-w-full no-scrollbar">
         {urls.map((url, index) => (
           <URLCard key={index} url={url} />
         ))}
