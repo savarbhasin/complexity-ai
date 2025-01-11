@@ -104,7 +104,7 @@ export function ChatInterface() {
             <form onSubmit={handleSubmit} className="relative">
               <textarea
                 value={inputValue}
-                onChange={(e) => setInputValue(e.target.valueq)}
+                onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     e.preventDefault();
