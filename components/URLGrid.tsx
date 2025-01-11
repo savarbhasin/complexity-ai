@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Globe, Clock } from 'lucide-react';
+import { Globe, Clock, Video, Twitter } from 'lucide-react';
+import { TwitterEmbed } from './TwitterEmbed';
+import { YouTubeEmbed } from './YoutubeEmbed';
+import { getTweetId, getYouTubeVideoId } from '@/lib/match';
 
-interface Metadata {
-  title?: string;
-  description?: string;
-  image?: string;
-  icon?: string;
-  provider?: string;
-}
+
+
+
+
+
 
 const URLCard = ({ url }: { url: string }) => {
   const [metadata, setMetadata] = useState<Metadata | null>(null);
@@ -17,10 +18,27 @@ const URLCard = ({ url }: { url: string }) => {
   useEffect(() => {
     const fetchMetadata = async () => {
       try {
+        // Check for YouTube or Twitter URLs first
+        const youtubeId = getYouTubeVideoId(url);
+        const tweetId = getTweetId(url);
+        
+        if (youtubeId) {
+          setMetadata({ type: 'youtube', videoId: youtubeId });
+          setLoading(false);
+          return;
+        }
+        
+        if (tweetId) {
+          setMetadata({ type: 'twitter', tweetId: tweetId });
+          setLoading(false);
+          return;
+        }
+
+        // For other URLs, fetch metadata as usual
         const response = await fetch(`/api/metadata?url=${encodeURIComponent(url)}`);
         if (!response.ok) throw new Error('Failed to fetch metadata');
         const data = await response.json();
-        setMetadata(data);
+        setMetadata({ ...data, type: 'default' });
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -43,6 +61,14 @@ const URLCard = ({ url }: { url: string }) => {
     );
   }
 
+  if (metadata?.type === 'youtube' && metadata.videoId) {
+    return <YouTubeEmbed videoId={metadata.videoId} />;
+  }
+
+  if (metadata?.type === 'twitter' && metadata.tweetId) {
+    return <TwitterEmbed tweetId={metadata.tweetId} />;
+  }
+
   return (
     <a
       href={url}
@@ -50,7 +76,7 @@ const URLCard = ({ url }: { url: string }) => {
       rel="noopener noreferrer"
       className="flex items-center gap-0.5 text-xs font-medium text-blue-400 hover:text-blue-300 transition-colors"
     >
-      <div className="w-full md:w-48 bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-700 m-2 ml-0">
+      <div className="w-48 bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-700 m-2 ml-0">
         <div className="relative">
           {metadata?.image ? (
             <img
@@ -58,8 +84,7 @@ const URLCard = ({ url }: { url: string }) => {
               alt={metadata.title || 'Website preview'}
               className="w-full h-24 object-cover"
               onError={(e) => {
-                e.currentTarget.src =
-                  'https://media.istockphoto.com/id/1219741272/photo/rad-cat-holding-a-blank-sign-isolated-on-black-background.jpg?s=612x612&w=0&k=20&c=FfLzsUu30sUTf22CNjB5TTzAjO-0RrhnPBRUU0vJ9kQ=';
+                e.currentTarget.src = '/api/placeholder/400/320';
               }}
             />
           ) : (
@@ -117,16 +142,12 @@ const URLCard = ({ url }: { url: string }) => {
 
 const URLGrid = ({ urls }: { urls: string[] }) => {
   if (!urls || urls.length === 0) {
-    return (
-      <div className="flex w-full p-4 text-gray-400">
-        No URLs available
-      </div>
-    );
+    return null;
   }
 
   return (
-    <div className="w-full max-w-7xl mx-auto p-2 ">
-      <div className="flex overflow-x-auto max-w-full no-scrollbar">
+    <div className="w-full max-w-7xl mx-auto p-2">
+      <div className="flex rounded-xl overflow-x-scroll max-w-full no-scrollbar">
         {urls.map((url, index) => (
           <URLCard key={index} url={url} />
         ))}
