@@ -30,7 +30,7 @@ export function ChatInterface() {
  
 
   return (
-    <div className="flex md:w-[45rem] w-[95%] flex-col items-center justify-between h-dvh pb-40 md:pb-0  text-white">
+    <div className="flex md:w-[45rem] w-[95%] flex-col items-center justify-between h-dvh pb-[4rem] md:pb-0  text-white">
       {!visibleMessages || visibleMessages.length === 0 ? (
         <div className="h-full w-full flex flex-col items-center justify-center px-4 text-center">
           <h1 className="text-2xl sm:text-4xl font-serif text-white mb-6">
@@ -104,7 +104,7 @@ export function ChatInterface() {
             <form onSubmit={handleSubmit} className="relative">
               <textarea
                 value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
+                onChange={(e) => setInputValue(e.target.valueq)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     e.preventDefault();
