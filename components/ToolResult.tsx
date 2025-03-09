@@ -12,7 +12,7 @@ export const ToolResult = ({ result }: {result:string}) => {
       >
         {
           resultData.urls && (
-            <URLGrid urls={resultData.urls} />
+              <URLGrid urls={resultData.urls} />
           ) 
         }
       </motion.div>

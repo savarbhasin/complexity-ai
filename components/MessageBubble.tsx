@@ -13,11 +13,11 @@ export const MessageBubble = ({ message }: any) => {
     >
       <div 
         className={`font-serif ${
-          !isAssistant ? 'text-emerald-300 md:text-2xl text-[1.25rem]  ml-auto' : ''
+          !isAssistant ? 'text-emerald-300  text-[1rem]  ml-auto' : ''
         }`}
       >
         {isAssistant ? (
-          <Markdown className="markdown font-serif md:text-[1.25rem] text-[0.9rem] text-white">{message.content}</Markdown>
+          <Markdown className="markdown font-serif  text-[1rem] text-white">{message.content}</Markdown>
         ) : (
          message.content
         )}

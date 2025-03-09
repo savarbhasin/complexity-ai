@@ -24,11 +24,9 @@ const Messages = ({visibleMessages, isLoading}:{
                     }
                     
                     if (message.isTextMessage()) {
-                        console.log('received message', message);
                         return <MessageBubble key={index} message={message} />;
                     }
                     if (message.isResultMessage() ) {
-                        console.log('result rcvd message');
                         return <ToolResult key={index} result={message.result} />;
                     }
                     return null;
