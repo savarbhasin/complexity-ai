@@ -1,33 +1,29 @@
-name: Deploy to Server
+name: Deploy
+
 on:
   push:
-    branches:
-      - main  
+    branches: [ main ]
+
 jobs:
-  deploy:
+  Deploy:
+    name: Deploy to EC2
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-        
-      - name: Set up SSH Key
+      - uses: actions/checkout@v2 
+      - name: Build & Deploy
+        env:
+            PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+            HOSTNAME: ${{secrets.SERVER_IP}}
+            USER_NAME: ${{secrets.USER_NAME}}
+      
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" | base64 --decode > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
-          
-      - name: Deploy over SSH
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ubuntu
-          key_path: ~/.ssh/id_rsa
-          script: |
-            export NODE_ENV=production
-            cd ~/complexity-ai 
-            git pull origin main
-            npm ci
-            npm run build
-            pm2 restart nextjs-app || (pm2 delete nextjs-app && pm2 start npm --name "nextjs-app" -- start)
-            sudo systemctl restart nginx
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+
+              cd /home/ubuntu/complexity-ai &&
+              git pull &&
+              sudo npm ci &&
+              sudo npm run build &&
+              pm2 restart nextjs-app || (pm2 delete nextjs-app && pm2 start npm --name "nextjs-app" -- start)
+              
