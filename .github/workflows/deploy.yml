@@ -18,8 +18,13 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script_stop: true
           script: |
+            export NODE_ENV=production
             cd ~/complexity-ai 
             git pull origin main
-            pm2 restart nextjs-app || pm2 start npm --name "nextjs-app" -- start
+            npm ci
+            npm run build
+            pm2 restart nextjs-app || pm2 delete nextjs-app && pm2 start npm --name "nextjs-app" -- start
             sudo systemctl restart nginx
+
