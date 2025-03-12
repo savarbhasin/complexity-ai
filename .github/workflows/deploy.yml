@@ -23,7 +23,6 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script_stop: true
           script: |
             export NODE_ENV=production
             cd ~/complexity-ai 
