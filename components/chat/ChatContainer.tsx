@@ -4,8 +4,12 @@ import { useRef, useLayoutEffect } from 'react';
 import { Message } from '@/types';
 import { MessageBubble } from '@/components/message/MessageBubble';
 import { ToolExecution } from '@/components/message/ToolExecution';
-import { ToolResult } from '@/components/message/ToolResult';
+import dynamic from 'next/dynamic';
 import { useMessageLoading } from '@/hooks/useMessageLoading';
+
+const ToolResult = dynamic(() => import('@/components/message/ToolResult').then(mod => mod.ToolResult), {
+  ssr: false,
+});
 
 interface ChatContainerProps {
   messages: Message[];
