@@ -1,8 +1,7 @@
-import URLGrid from "./URLGrid";
+import URLGrid from "@/components/embeds/URLGrid";
 import { motion } from 'framer-motion';
 
-export const ToolResult = ({ result }: {result:string}) => {
-    const resultData = JSON.parse(result);
+export const ToolResult = ({ urls }: {urls:string[]}) => {
     
     return (
       <motion.div
@@ -11,8 +10,8 @@ export const ToolResult = ({ result }: {result:string}) => {
         className="overflow-hidden"
       >
         {
-          resultData.urls && (
-              <URLGrid urls={resultData.urls} />
+          urls && (
+              <URLGrid urls={urls} />
           ) 
         }
       </motion.div>

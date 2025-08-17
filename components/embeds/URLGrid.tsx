@@ -1,14 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { Globe, Clock, Video, Twitter } from 'lucide-react';
-import { TwitterEmbed } from './TwitterEmbed';
-import { YouTubeEmbed } from './YoutubeEmbed';
+import { useEffect, useState } from 'react';
+import { Globe, Clock } from 'lucide-react';
+import { TwitterEmbed } from '@/components/embeds/TwitterEmbed';
+import { YouTubeEmbed } from '@/components/embeds/YoutubeEmbed';
 import { getTweetId, getYouTubeVideoId } from '@/lib/match';
-
-
-
-
-
-
+import type { Metadata } from '@/types';
 
 const URLCard = ({ url }: { url: string }) => {
   const [metadata, setMetadata] = useState<Metadata | null>(null);
@@ -140,7 +135,7 @@ const URLCard = ({ url }: { url: string }) => {
   );
 };
 
-const URLGrid = ({ urls }: { urls: string[] }) => {
+export const URLGrid = ({ urls }: { urls: string[] }) => {
   if (!urls || urls.length === 0) {
     return null;
   }
