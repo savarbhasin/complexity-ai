@@ -12,6 +12,7 @@
     "@copilotkit/react-core": "^1.4.8-coagents-v0-3.1",
     "@copilotkit/react-ui": "^1.4.8-coagents-v0-3.1",
     "@copilotkit/runtime": "^1.10.2",
+    "@next/bundle-analyzer": "^15.4.6",
     "class-validator": "^0.14.2",
     "framer-motion": "^11.17.0",
     "lucide-react": "^0.469.0",
