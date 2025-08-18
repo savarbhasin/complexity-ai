@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useLayoutEffect } from 'react';
+import { useRef } from 'react';
 import { Message } from '@/types';
 import { MessageBubble } from '@/components/message/MessageBubble';
 import { ToolExecution } from '@/components/message/ToolExecution';
@@ -19,28 +19,7 @@ export function ChatContainer({ messages }: ChatContainerProps) {
   const messageContainerRef = useRef<HTMLDivElement>(null);
   const loadingToolCalls = useMessageLoading(messages);
 
-  // This effect ensures that when a new user message is added, the container
-  // scrolls to position that message at the very top of the visible area.
-  useLayoutEffect(() => {
-    // Find the index of the last message that is from the user.
-    const lastUserMessageIndex = messages.findLastIndex(
-      (msg) => msg.role === 'user'
-    );
-
-    if (lastUserMessageIndex !== -1) {
-      // Find the corresponding DOM element by its ID.
-      const messageId = `message-${lastUserMessageIndex}`;
-      const element = document.getElementById(messageId);
-
-      if (element) {
-        // Scroll the element into view, aligning its top with the container's top.
-        // 'auto' makes the scroll instant. Use 'smooth' for a scrolling animation.
-        element.scrollIntoView({ behavior: 'auto', block: 'start' });
-      }
-    }
-    // We only want this effect to run when the list of messages changes.
-  }, [messages]);
-
+  
   return (
     <div
       ref={messageContainerRef}
