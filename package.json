@@ -17,7 +17,7 @@
     "framer-motion": "^11.17.0",
     "lucide-react": "^0.469.0",
     "markdown-to-jsx": "^7.7.3",
-    "next": "15.1.4",
+    "next": "15.2.4",
     "node-html-parser": "^7.0.1",
     "openai": "^4.77.3",
     "react": "^19.0.0",
