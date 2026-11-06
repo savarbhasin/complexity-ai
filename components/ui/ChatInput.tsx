@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, FormEvent, useRef, useEffect } from 'react';
+import { useState, type FormEvent, type KeyboardEvent } from 'react';
 import { Send, Square } from 'lucide-react';
 
 interface ChatInputProps {
@@ -19,7 +19,7 @@ export function ChatInput({
   onStopGeneration
 }: ChatInputProps) {
   const [inputValue, setInputValue] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!inputValue.trim() || isLoading) return;
@@ -27,19 +27,12 @@ export function ChatInput({
     setInputValue("");
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSubmit(e);
     }
   };
-
-  const handleStop = () => {
-    if (onStopGeneration) {
-      onStopGeneration();
-    }
-  };
-
 
   return (
     <form onSubmit={handleSubmit} className={`w-full ${className}`}>
@@ -47,7 +40,6 @@ export function ChatInput({
       px-5 py-4 focus-within:border-gray-600 transition-colors min-h-[8rem]">
         {/* Input */}
         <input
-          ref={inputRef}
           autoFocus={true}
           type="text"
           value={inputValue}
@@ -63,7 +55,7 @@ export function ChatInput({
           {isLoading ? (
             <button
               type="button"
-              onClick={handleStop}
+              onClick={onStopGeneration}
               className="p-3 bg-red-500 hover:bg-red-600 rounded-xl transition-colors"
             >
               <Square className="h-3 w-3 text-white fill-white" />
