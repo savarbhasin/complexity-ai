@@ -6,40 +6,25 @@ This document outlines the improved, modular architecture of the complexity.ai c
 
 ```
 complexity-ai/
-├── app/                     # Next.js App Router
-│   ├── api/                 # API routes
-│   ├── layout.tsx          # Root layout (server component)
-│   └── page.tsx            # Home page (server component)
+├── app/
+│   ├── api/metadata/route.ts   # Edge route: scrapes title/description/image for a URL
+│   ├── layout.tsx
+│   └── page.tsx
 ├── components/
-│   ├── chat/               # Chat-specific components
-│   │   ├── ChatContainer.tsx    # Message display container
-│   │   └── ChatInterface.tsx    # Main chat interface
-│   ├── embeds/             # URL embed components
-│   │   ├── TwitterEmbed.tsx
-│   │   ├── URLGrid.tsx
-│   │   └── YoutubeEmbed.tsx
-│   ├── message/            # Message-specific components  
-│   │   ├── MessageBubble.tsx
-│   │   ├── ToolExecution.tsx
-│   │   └── ToolResult.tsx
-│   ├── ui/                 # Reusable UI components
-│   │   ├── ChatInput.tsx
-│   │   ├── EmptyState.tsx
-│   │   └── LoadingSpinner.tsx
-│   ├── ChatInterface.tsx   # Legacy wrapper (backward compatibility)
-│   └── Messages.tsx        # Legacy wrapper (backward compatibility)
-├── hooks/                  # Custom React hooks
-│   ├── useChat.ts          # Chat functionality hook
-│   └── useMessageLoading.ts # Message loading state hook
-├── lib/                    # Utilities and configuration
-│   ├── config.ts           # Application configuration
-│   ├── constants.ts        # Tool configurations and constants
-│   └── match.ts            # URL matching utilities
-├── services/               # Business logic and API calls
-│   └── chat.service.ts     # Chat API service
-├── types/                  # TypeScript type definitions
-│   └── index.ts            # All type definitions
-└── .env.local             # Environment variables
+│   ├── chat/                   # ChatInterface (layout) + ChatContainer (message list)
+│   ├── embeds/                 # URLGrid -> URLCard -> YouTube/Twitter embeds
+│   ├── message/                # MessageBubble, ToolExecution, ToolResult
+│   └── ui/                     # ChatInput, EmptyState, loading indicators
+├── hooks/
+│   ├── useStreamingChat.ts     # Transcript state + streaming lifecycle
+│   ├── useMessageLoading.ts    # Which tool calls are still running
+│   └── useUrlMetadata.ts       # Resolves preview metadata for a URL
+├── lib/
+│   ├── config.ts               # Environment-driven configuration
+│   ├── constants.ts            # Tool display configs (icons, colors, text)
+│   └── match.ts                # YouTube / Twitter URL matching
+├── services/chat.service.ts    # streamChat(): SSE request -> async stream of events
+└── types/index.ts              # Shared TypeScript types
 ```
 
 ## 🎯 Key Improvements

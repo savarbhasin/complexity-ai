@@ -1,3 +1,5 @@
+import type { LucideIcon } from 'lucide-react';
+
 export interface Metadata {
   title?: string;
   description?: string;
@@ -17,7 +19,8 @@ export interface Message {
   urls?: string[];
   content?: string;
   error?: string;
-  isComplete?: boolean; // For streaming messages
+  /** `false` while a streaming message is still receiving chunks. */
+  isComplete?: boolean;
 }
 
 export interface ChatResponse {
@@ -35,11 +38,11 @@ export interface ChatRequest {
 }
 
 export type MessageType = Message['type'];
-export type StreamingMessageType = 'chunk' | 'content' | 'tool_call' | 'tool_result' | 'error';
+export type StreamingMessageType = ChatResponse['type'];
 export type MessageRole = Message['role'];
 
 export interface ToolConfig {
-  icon: any;
+  icon: LucideIcon;
   loadingText: string;
   doneText: string;
   color: string;
@@ -48,10 +51,10 @@ export interface ToolConfig {
   loadingBgColor: string;
 }
 
-export type ToolName = 
-  | 'webscrape' 
-  | 'summarize_youtube_video' 
-  | 'arxiv_search' 
+export type ToolName =
+  | 'webscrape'
+  | 'summarize_youtube_video'
+  | 'arxiv_search'
   | 'get_twitter_posts'
   | 'search_on_any_website'
   | 'retrieve_web_content'

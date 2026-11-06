@@ -1,12 +1,16 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle2 } from 'lucide-react';
-import { Message } from '@/types';
-import { TOOL_CONFIGS } from '@/lib/constants';
+import type { Message } from '@/types';
+import { getToolConfig } from '@/lib/constants';
 import { LoadingPulse } from '@/components/ui/LoadingSpinner';
 
-export const ToolExecution = ({ message, isLoading }: { message: Message, isLoading: boolean   }) => {
-  const config = TOOL_CONFIGS[message.tool_call as keyof typeof TOOL_CONFIGS] || TOOL_CONFIGS.default;
+interface ToolExecutionProps {
+  message: Message;
+  isLoading: boolean;
+}
+
+export const ToolExecution = ({ message, isLoading }: ToolExecutionProps) => {
+  const config = getToolConfig(message.tool_call);
   const Icon = config.icon;
 
   return (
